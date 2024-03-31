@@ -14,17 +14,14 @@ We use the Standford Lytro, Kalantari, and HCInew as the training set.
 ## Citation
 If you find this work helpful, please consider citing the following papers:<br> 
 ```Citation
-@article{liu2023disparity,
-  title={Disparity-Guided Light Field Image Super-Resolution via Feature Modulation and Recalibration},
+@article{liu2024adaptive,
+  title={Adaptive pixel aggregation for joint spatial and angular super-resolution of light field images},
   author={Liu, Gaosheng and Yue, Huanjing and Li, Kun and Yang, Jingyu},
-  journal={IEEE Transactions on Broadcasting},
-  year={2023},
-  publisher={IEEE}
+  journal={Information Fusion},
+  volume={104},
+  pages={102183},
+  year={2024},
+  publisher={Elsevier}
 }
 }
 ```
-## Acknowledgement
-Our work and implementations are inspired and based on the following projects: <br> 
-[LF-DFnet](https://github.com/YingqianWang/LF-DFnet)<br> 
-[LF-InterNet](https://github.com/YingqianWang/LF-InterNet)<br> 
-We sincerely thank the authors for sharing their code and amazing research work!
