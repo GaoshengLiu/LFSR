@@ -23,5 +23,4 @@ If you find this work helpful, please consider citing the following papers:<br>
   year={2024},
   publisher={Elsevier}
 }
-}
 ```
