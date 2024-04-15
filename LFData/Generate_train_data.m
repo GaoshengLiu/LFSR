@@ -9,17 +9,17 @@ addpath(genpath('./Functions/'))
 %save = 'F:\LFASR\Data\';
 %mkdir(save);
 angRes = 2;
-angRes_label = 7;
+angRes_label = 5;
 factor = 2;
 downRatio = 1/factor;
-patchsize = 48*factor;%48*factor;%64x64
-stride = 24*factor;%24*factor for HDSR;
+patchsize = 32*factor;%48*factor;
+stride = 16*factor;%24*factor for HDSR;
 sourceDataPath = '.\Dataset\Train_mat\all\';
-sourceDatasets = dir(sourceDataPath);%»ñµÃÖ¸¶¨ÎÄ¼ş¼ĞÏÂµÄËùÓĞ×ÓÎÄ¼ş¼ĞºÍÎÄ¼ş
+sourceDatasets = dir(sourceDataPath);%è·å¾—æŒ‡å®šæ–‡ä»¶å¤¹ä¸‹çš„æ‰€æœ‰å­æ–‡ä»¶å¤¹å’Œæ–‡ä»¶
 sourceDatasets(1:2) = [];
 datasetsNum = length(sourceDatasets);
 idx = 0;
-SavePath = ['I:/Data/TrainingData_HDSR', '_', num2str(angRes), 'x', num2str(angRes), '_sx', num2str(factor), 'SR', '_', num2str(angRes_label), 'x', num2str(angRes_label), '/'];
+SavePath = ['I:/Data/TrainingData', '_', num2str(angRes), 'x', num2str(angRes), '_sx', num2str(factor), 'SR', '_', num2str(angRes_label), 'x', num2str(angRes_label), '/'];
 if exist(SavePath, 'dir')==0
     mkdir(SavePath);
 end
@@ -41,7 +41,7 @@ for DatasetIndex = 1 : datasetsNum
         dataPath = [sourceDataFolder, folders(iScene).name];
         data = load(dataPath);
         
-        LF = data.LF; %¶ÁÈ¡¹â³¡Êı¾İ      
+        LF = data.LF; %è¯»å–å…‰åœºæ•°æ®      
         LF = LF(:, :, :, :, 1:3);%5D
         [U, V, H, W, ~] = size(LF);
         ind_all = linspace(1,angRes_label*angRes_label,angRes_label*angRes_label);
@@ -51,16 +51,16 @@ for DatasetIndex = 1 : datasetsNum
         
         for h = 1 : stride : H-patchsize+1
             for w = 1 : stride : W-patchsize+1                
-                SAI = single(zeros(angRes_label, angRes_label, patchsize, patchsize));%singleÀàĞÍÕ¼4¸ö×Ö½Ú
-                %SAIlr = single(zeros(angRes*angRes, patchsize, patchsize));%singleÀàĞÍÕ¼4¸ö×Ö½Ú
-                data  = single(zeros(angRes*patchsize*downRatio, angRes*patchsize*downRatio));%singleÀàĞÍÕ¼4¸ö×Ö½ÚangRes
+                SAI = single(zeros(angRes_label, angRes_label, patchsize, patchsize));%singleç±»å‹å 4ä¸ªå­—èŠ‚
+                %SAIlr = single(zeros(angRes*angRes, patchsize, patchsize));%singleç±»å‹å 4ä¸ªå­—èŠ‚
+                data  = single(zeros(angRes*patchsize*downRatio, angRes*patchsize*downRatio));%singleç±»å‹å 4ä¸ªå­—èŠ‚angRes
                 label = single(zeros(angRes_label*patchsize, angRes_label*patchsize));
                 LFhr = LF(floor(0.5*(U-angRes_label+2)):floor(0.5*(U+angRes_label)), floor(0.5*(V-angRes_label+2)):floor(0.5*(V+angRes_label)), h:h+patchsize-1, w:w+patchsize-1, :); % Extract central angRes*angRes views
                 %LFhr = LF(1:angRes_label, 1:angRes_label, h:h+patchsize-1, w:w+patchsize-1, :); % Extract central angRes*angRes views
                 size(LFhr);
-                %%ÊäÈëÊÇ1
+                %%è¾“å…¥æ˜¯1
                 %LFlr = LFhr(ceil(angRes_label/2),ceil(angRes_label/2),:,:,:);
-                %%ÊäÈëÊÇn*n
+                %%è¾“å…¥æ˜¯n*n
                 LFlr = LFhr(1:delt:angRes_label,1:delt:angRes_label,:,:,:);
                 
                 count = 1;
@@ -70,7 +70,7 @@ for DatasetIndex = 1 : datasetsNum
                         SAItemp = squeeze(LFhr(u, v, :, :, :));
                         %imwrite(SAItemp,[save 'ours_' num2str(u) '_' num2str(v) '.png']);%ours
                         SAItemp = rgb2ycbcr(double(SAItemp));
-                        temp = squeeze(SAItemp(:,:,1));%½µµÍÁËÎ¬¶È£¬°ÑÎ¬¶ÈÉÏÊÇ1µÄÈ¥µô
+                        temp = squeeze(SAItemp(:,:,1));%é™ä½äº†ç»´åº¦ï¼ŒæŠŠç»´åº¦ä¸Šæ˜¯1çš„å»æ‰
                         label((u-1)*patchsize+1 : u*patchsize, (v-1)*patchsize+1 : v*patchsize) = temp;
                     end
                 end
@@ -79,7 +79,7 @@ for DatasetIndex = 1 : datasetsNum
                         SAItemp = squeeze(LFlr(u, v, :, :, :));
                         %imwrite(SAItemp,[save 'ours_' num2str(u) '_' num2str(v) '.png']);%ours
                         SAItemp = rgb2ycbcr(double(SAItemp));
-                        temp = squeeze(SAItemp(:,:,1));%½µµÍÁËÎ¬¶È£¬°ÑÎ¬¶ÈÉÏÊÇ1µÄÈ¥µô
+                        temp = squeeze(SAItemp(:,:,1));%é™ä½äº†ç»´åº¦ï¼ŒæŠŠç»´åº¦ä¸Šæ˜¯1çš„å»æ‰
                         temp = imresize(temp, downRatio);
                         data((u-1)*patchsize*downRatio+1 : u*patchsize*downRatio, (v-1)*patchsize*downRatio+1 : v*patchsize*downRatio) = temp;
                     end
