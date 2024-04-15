@@ -1,13 +1,9 @@
 %% Initialization
 clear all;
 clc;
-%close all;
 addpath(genpath('./Functions/'))
 
 
-%% Parameters setting
-%save = 'F:\LFASR\Data\';
-%mkdir(save);
 angRes = 2;
 angRes_label = 5;
 factor = 2;
@@ -15,7 +11,7 @@ downRatio = 1/factor;
 patchsize = 32*factor;%48*factor;
 stride = 16*factor;%24*factor for HDSR;
 sourceDataPath = '.\Dataset\Train_mat\all\';
-sourceDatasets = dir(sourceDataPath);%获得指定文件夹下的所有子文件夹和文件
+sourceDatasets = dir(sourceDataPath);%
 sourceDatasets(1:2) = [];
 datasetsNum = length(sourceDatasets);
 idx = 0;
@@ -41,7 +37,7 @@ for DatasetIndex = 1 : datasetsNum
         dataPath = [sourceDataFolder, folders(iScene).name];
         data = load(dataPath);
         
-        LF = data.LF; %读取光场数据      
+        LF = data.LF; %
         LF = LF(:, :, :, :, 1:3);%5D
         [U, V, H, W, ~] = size(LF);
         ind_all = linspace(1,angRes_label*angRes_label,angRes_label*angRes_label);
@@ -51,16 +47,12 @@ for DatasetIndex = 1 : datasetsNum
         
         for h = 1 : stride : H-patchsize+1
             for w = 1 : stride : W-patchsize+1                
-                SAI = single(zeros(angRes_label, angRes_label, patchsize, patchsize));%single类型占4个字节
-                %SAIlr = single(zeros(angRes*angRes, patchsize, patchsize));%single类型占4个字节
-                data  = single(zeros(angRes*patchsize*downRatio, angRes*patchsize*downRatio));%single类型占4个字节angRes
+                SAI = single(zeros(angRes_label, angRes_label, patchsize, patchsize));%
+                %SAIlr = single(zeros(angRes*angRes, patchsize, patchsize));%
+                data  = single(zeros(angRes*patchsize*downRatio, angRes*patchsize*downRatio));%
                 label = single(zeros(angRes_label*patchsize, angRes_label*patchsize));
                 LFhr = LF(floor(0.5*(U-angRes_label+2)):floor(0.5*(U+angRes_label)), floor(0.5*(V-angRes_label+2)):floor(0.5*(V+angRes_label)), h:h+patchsize-1, w:w+patchsize-1, :); % Extract central angRes*angRes views
-                %LFhr = LF(1:angRes_label, 1:angRes_label, h:h+patchsize-1, w:w+patchsize-1, :); % Extract central angRes*angRes views
                 size(LFhr);
-                %%输入是1
-                %LFlr = LFhr(ceil(angRes_label/2),ceil(angRes_label/2),:,:,:);
-                %%输入是n*n
                 LFlr = LFhr(1:delt:angRes_label,1:delt:angRes_label,:,:,:);
                 
                 count = 1;
@@ -79,7 +71,7 @@ for DatasetIndex = 1 : datasetsNum
                         SAItemp = squeeze(LFlr(u, v, :, :, :));
                         %imwrite(SAItemp,[save 'ours_' num2str(u) '_' num2str(v) '.png']);%ours
                         SAItemp = rgb2ycbcr(double(SAItemp));
-                        temp = squeeze(SAItemp(:,:,1));%降低了维度，把维度上是1的去掉
+                        temp = squeeze(SAItemp(:,:,1));
                         temp = imresize(temp, downRatio);
                         data((u-1)*patchsize*downRatio+1 : u*patchsize*downRatio, (v-1)*patchsize*downRatio+1 : v*patchsize*downRatio) = temp;
                     end
