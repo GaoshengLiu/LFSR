@@ -5,6 +5,7 @@ This repository contains official pytorch implementation of Adaptive Pixel Aggre
 
 ## Dataset
 We use the Standford Lytro, Kalantari, and HCInew as the training set.
+The test sets in mat format can be downloaded from [BaiduPan](https://pan.baidu.com/s/1pYKMcBwex7xbiAwG-zoKEA), code IIRL.
 ## Code
 ### Dependencies
 * Ubuntu 18.04
